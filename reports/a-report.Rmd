@@ -1,8 +1,7 @@
 ---
-title: "REPLACE ME"
-output:
-    html_document:
-    df_print: paged
+title: "Lab 1: Parte 2"
+author: "Helder Machado de Lima"
+output: html_document
 theme: sandstone
 ---
 
@@ -14,4 +13,62 @@ theme_set(theme_bw())
 
 ```{r read}
 atividade = read_projectdata()
+polititicos_filter = atividade %>% filter(!is.na(twitter) & !is.na(seguidores) & !is.na(segue))
 ```
+
+## P1: De quais estados são os congressistas com maior engajamento de retweets?
+
+```{r}
+options(scipen = 999)
+polititicos_filter %>% ggplot(aes(x = UF, y = engaj_max_retweet, yend=600000,scipen = 999, format(y, scientific = FALSE))) + geom_col() +
+  labs(title="UF x Engajamento máximo de retweets",
+       y="Engajamento total de retweets", 
+       x="Unidade Federativa")
+```
+
+### Resposta: SP, SJ, MG, PR, RS
+
+## Pergunta derivada da P1: O engajamento próprio se mantem na maioria dos casos?
+
+```{r}
+polititicos_filter %>% ggplot(aes(x = UF, y = engaj_max_proprio)) + geom_col() + coord_flip()+
+  labs(title="UF x Engajamento máximo próprio?",
+       y="Engajamento máximo próprio", 
+       x="Unidade Federativa")
+
+```
+
+### Resposta: Na maioria dos casos sim, mas tomando o PA como exemplo, podemos perceber que há casos em que o engajamento vem basicamente dos retweets e não dos congressista do partido.
+
+
+## P2: Maior engajamento significa maior número de seguidores?
+### O escopo foi reduzido para uma melhor visualização
+
+```{r}
+polititicos_filter %>% filter(partido == "PSL" | partido == "PT" | partido == "MDB"| partido == "PSDB") %>% ggplot(aes(x = partido , y=engaj_max)) + geom_col() +
+  labs(
+    title="Engajamento máximo x Partido",
+    y="Engajamento total de retweets", 
+    x="Partidos")
+
+polititicos_filter %>% filter(partido == "PSL" | partido == "PT"| partido == "MDB"| partido == "PSDB") %>% ggplot(aes(x = partido , y=seguidores)) + geom_col() +
+  labs(
+    title="Partidos x Seguidores",
+    y="Seguidores", 
+    x="Partidos")
+
+```
+### Resposta: Em grande maioria sim, mas existem anomalias como o do PSDB que o engajamento baixo não está relacionado com um baixo número de seguidores, pelo contrário, eles possuem um alto número de seguidores.
+
+## Pergunta derivada da P2: O número de seguidores tem influência no número de tweets dos parlamentares?
+
+```{r}
+polititicos_filter %>% filter(partido == "PSL" | partido == "PT"| partido == "MDB"| partido == "PSDB") %>% ggplot(aes(x = partido , y=n_proprio)) + geom_col() +
+  labs(
+    title="De quais estados são os congressistas com maior engajamento de retweets?",
+    x="Partido", 
+    y="Tweets próprios")
+```
+
+## Resposta: Neste caso é possível perceber que o PT tem menos seguidores e mesmo assim tem um maior engajamento e os parlamentares apresentam um número alto de tweets dos congressistas, já o PSDB segue a na contramão de e mesmo com muitos seguidores, não conseguem ter um alto número de retweets, pelos visto parece ser por não se mostrarem tão presentes no estado político atual. 
+
