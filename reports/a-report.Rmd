@@ -57,7 +57,7 @@ polititicos_filter %>% filter(partido == "PSL" | partido == "PT"| partido == "MD
     y="Seguidores", 
     x="Partidos")
 
-polititicos_filter %>% filter(partido == "PSL" | partido == "PT" | partido == "MDB"| partido == "PSDB") %>% ggplot(aes(x = seguidores , y=engaj_max, color=partido)) + geom_point() + scale_y_log10() + scale_x_log10() + facet_grid(partido ~.)
+polititicos_filter %>% filter(partido == "PSL" | partido == "PT" | partido == "MDB"| partido == "PSDB") %>% ggplot(aes(x = seguidores , y=engaj_max, color=partido)) + geom_boxplot()+ geom_point() + coord_flip() + scale_y_log10() + scale_x_log10() + facet_grid(partido ~.)
   labs(
     title="Engajamento máximo x Partido",
     y="Engajamento total de retweets", 
